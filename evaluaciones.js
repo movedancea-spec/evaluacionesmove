@@ -29,8 +29,23 @@ const CATEGORIES = [
   { key: "puntualidad", label: "Puntualidad", group: 2 },
 ];
 
-const GROUP_TITLES = ["💪 Técnica Corporal", "🎭 Artístico", "⭐ Actitud y Disciplina"];
-const TOTAL_PANTALLAS_POR_ALUMNA = GROUP_TITLES.length + 1; // + pantalla de textos
+const GROUP_TITLES = ["💪 Técnica Corporal", "🎭 Artístico", "⭐ Actitud y Disciplina", "📝 Comentarios"];
+
+const TEXT_FIELDS = [
+  { key: "fortalezas", label: "Fortalezas", group: 3 },
+  { key: "aspectos", label: "Aspectos a mejorar", group: 3 },
+  { key: "objetivo", label: "Objetivo siguiente periodo", group: 3 },
+  { key: "observaciones", label: "Observaciones", group: 3 },
+];
+
+// Cada "punto" es UNA categoría (o un comentario) que se califica para
+// TODAS las alumnas seleccionadas al mismo tiempo, antes de pasar al
+// siguiente punto. Esto es más rápido que terminar una alumna completa
+// antes de pasar a la otra.
+const PUNTOS = [
+  ...CATEGORIES.map((c) => ({ ...c, tipo: "estrellas" })),
+  ...TEXT_FIELDS.map((t) => ({ ...t, tipo: "texto" })),
+];
 
 // -------------------------------------
 // ELEMENTOS
@@ -58,10 +73,8 @@ let maestraSeleccionada = null;
 let contextoEvaluacion = {}; // clase, periodo, tipo, anio
 let seleccionAlumnas = new Map(); // id -> {id, nombre, codigo}
 let cola = [];
-let indiceActual = 0;
-let grupoActual = 0;
-let ratingsActuales = {};
-let contadorGuardadas = 0;
+let indicePunto = 0;
+let datosAlumnas = new Map(); // alumnaId -> { ratings: {}, textos: {} }
 
 // -------------------------------------
 // UTILIDADES
@@ -208,141 +221,127 @@ el("buscarAlumna").addEventListener("input", (e) => renderAlumnas(e.target.value
 
 el("btnEmpezarEvaluacion").addEventListener("click", () => {
   cola = Array.from(seleccionAlumnas.values());
-  indiceActual = 0;
-  contadorGuardadas = 0;
-  iniciarAlumnaActual();
+  datosAlumnas = new Map(cola.map((a) => [a.id, { ratings: {}, textos: {} }]));
+  indicePunto = 0;
+  renderPunto();
+  mostrarPantalla("evaluando");
 });
 
 // -------------------------------------
-// PANTALLA 4: EVALUANDO (por alumna)
+// PANTALLA 4: EVALUANDO
+// Una categoría (o comentario) a la vez, mostrando a TODAS las
+// alumnas seleccionadas juntas, para calificar más rápido.
 // -------------------------------------
 
-function iniciarAlumnaActual() {
-  const alumna = cola[indiceActual];
-  ratingsActuales = {};
-  grupoActual = 0;
-  el("nombreAlumnaActual").textContent = alumna.nombre;
-  el("progresoCola").textContent = `Alumna ${indiceActual + 1} de ${cola.length}`;
-  renderDots();
-  renderGrupoActual();
-  mostrarPantalla("evaluando");
-}
+function renderPunto() {
+  const punto = PUNTOS[indicePunto];
+  const esUltimo = indicePunto === PUNTOS.length - 1;
 
-function renderDots() {
-  const cont = el("dotsGrupos");
+  el("progresoCola").textContent = `Punto ${indicePunto + 1} de ${PUNTOS.length}`;
+  el("tituloPunto").textContent = `${GROUP_TITLES[punto.group]} · ${punto.label}`;
+  el("barraFill").style.width = `${((indicePunto + 1) / PUNTOS.length) * 100}%`;
+  el("btnAtrasGrupo").style.visibility = indicePunto === 0 ? "hidden" : "visible";
+  el("btnSiguienteGrupo").textContent = esUltimo ? "Guardar todo ✓" : "Siguiente →";
+
+  const cont = el("filasAlumnas");
   cont.innerHTML = "";
-  for (let i = 0; i < TOTAL_PANTALLAS_POR_ALUMNA; i++) {
-    const span = document.createElement("span");
-    if (i <= grupoActual) span.classList.add("fill");
-    cont.appendChild(span);
-  }
-}
 
-function renderGrupoActual() {
-  const esPantallaTextos = grupoActual === GROUP_TITLES.length;
-  el("grupoCategorias").hidden = esPantallaTextos;
-  el("pantallaTextos").hidden = !esPantallaTextos;
-  el("btnAtrasGrupo").style.visibility = grupoActual === 0 ? "hidden" : "visible";
-  el("btnSiguienteGrupo").textContent = esPantallaTextos
-    ? (indiceActual === cola.length - 1 ? "Guardar y terminar ✓" : "Guardar y siguiente alumna →")
-    : "Siguiente →";
-
-  if (esPantallaTextos) return;
-
-  const cont = el("grupoCategorias");
-  cont.innerHTML = `<p class="grupo-titulo">${GROUP_TITLES[grupoActual]}</p>`;
-
-  CATEGORIES.filter((c) => c.group === grupoActual).forEach((cat) => {
+  cola.forEach((alumna) => {
+    const datos = datosAlumnas.get(alumna.id);
     const fila = document.createElement("div");
-    fila.className = "categoria-fila";
+    fila.className = "fila-alumna-punto";
 
     const nombre = document.createElement("span");
-    nombre.className = "categoria-nombre";
-    nombre.textContent = cat.label;
+    nombre.className = "fila-alumna-nombre";
+    nombre.textContent = alumna.nombre;
+    fila.appendChild(nombre);
 
-    const estrellasCont = document.createElement("div");
-    estrellasCont.className = "estrellas";
-
-    for (let i = 1; i <= 5; i++) {
-      const estrella = document.createElement("span");
-      estrella.className = "estrella" + (ratingsActuales[cat.key] >= i ? " activa" : "");
-      estrella.textContent = "★";
-      estrella.addEventListener("click", () => {
-        ratingsActuales[cat.key] = i;
-        renderGrupoActual();
+    if (punto.tipo === "estrellas") {
+      const estrellasCont = document.createElement("div");
+      estrellasCont.className = "estrellas";
+      for (let i = 1; i <= 5; i++) {
+        const estrella = document.createElement("span");
+        estrella.className = "estrella" + (datos.ratings[punto.key] >= i ? " activa" : "");
+        estrella.textContent = "★";
+        estrella.addEventListener("click", () => {
+          datos.ratings[punto.key] = i;
+          renderPunto();
+        });
+        estrellasCont.appendChild(estrella);
+      }
+      fila.appendChild(estrellasCont);
+    } else {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "input-texto-fila";
+      input.placeholder = "(opcional)";
+      input.value = datos.textos[punto.key] || "";
+      input.addEventListener("input", (e) => {
+        datos.textos[punto.key] = e.target.value;
       });
-      estrellasCont.appendChild(estrella);
+      fila.appendChild(input);
     }
 
-    fila.appendChild(nombre);
-    fila.appendChild(estrellasCont);
     cont.appendChild(fila);
   });
 }
 
 el("btnAtrasGrupo").addEventListener("click", () => {
-  if (grupoActual === 0) return;
-  grupoActual--;
-  renderDots();
-  renderGrupoActual();
+  if (indicePunto === 0) return;
+  indicePunto--;
+  renderPunto();
 });
 
 el("btnSiguienteGrupo").addEventListener("click", async () => {
-  const esPantallaTextos = grupoActual === GROUP_TITLES.length;
+  const esUltimo = indicePunto === PUNTOS.length - 1;
 
-  if (!esPantallaTextos) {
-    grupoActual++;
-    renderDots();
-    renderGrupoActual();
+  if (!esUltimo) {
+    indicePunto++;
+    renderPunto();
     return;
   }
 
-  // Última pantalla: guardar esta alumna
-  const alumna = cola[indiceActual];
-  el("btnSiguienteGrupo").disabled = true;
+  // Último punto: guardar la evaluación de TODAS las alumnas de la cola
+  const btn = el("btnSiguienteGrupo");
+  btn.disabled = true;
+  let guardadas = 0;
+
   try {
-    await llamarWorker({
-      accion: "guardar",
-      maestraId: maestraSeleccionada.id,
-      alumnaId: alumna.id,
-      alumnaNombre: alumna.nombre,
-      claseId: contextoEvaluacion.claseId,
-      claseNombre: contextoEvaluacion.claseNombre,
-      periodoId: contextoEvaluacion.periodoId,
-      periodoNombre: contextoEvaluacion.periodoNombre,
-      anio: contextoEvaluacion.anio,
-      tipo: contextoEvaluacion.tipo,
-      ratings: ratingsActuales,
-      fortalezas: el("txtFortalezas").value,
-      aspectos: el("txtAspectos").value,
-      objetivo: el("txtObjetivo").value,
-      observaciones: el("txtObservaciones").value,
-    });
-
-    contadorGuardadas++;
-    limpiarTextos();
-    indiceActual++;
-
-    if (indiceActual < cola.length) {
-      iniciarAlumnaActual();
-    } else {
-      el("mensajeFinal").textContent = `Evaluaste a ${contadorGuardadas} alumna${contadorGuardadas === 1 ? "" : "s"} 🎉`;
-      mostrarPantalla("listo");
+    for (const alumna of cola) {
+      btn.textContent = `Guardando ${guardadas + 1}/${cola.length}...`;
+      const datos = datosAlumnas.get(alumna.id);
+      await llamarWorker({
+        accion: "guardar",
+        maestraId: maestraSeleccionada.id,
+        alumnaId: alumna.id,
+        alumnaNombre: alumna.nombre,
+        claseId: contextoEvaluacion.claseId,
+        claseNombre: contextoEvaluacion.claseNombre,
+        periodoId: contextoEvaluacion.periodoId,
+        periodoNombre: contextoEvaluacion.periodoNombre,
+        anio: contextoEvaluacion.anio,
+        tipo: contextoEvaluacion.tipo,
+        ratings: datos.ratings,
+        fortalezas: datos.textos.fortalezas || "",
+        aspectos: datos.textos.aspectos || "",
+        objetivo: datos.textos.objetivo || "",
+        observaciones: datos.textos.observaciones || "",
+      });
+      guardadas++;
     }
+
+    el("mensajeFinal").textContent = `Evaluaste a ${guardadas} alumna${guardadas === 1 ? "" : "s"} 🎉`;
+    mostrarPantalla("listo");
   } catch (e) {
     console.error(e);
-    mostrarError("⚠ No se pudo guardar. Intenta de nuevo.");
+    mostrarError(
+      `⚠ Se guardaron ${guardadas} de ${cola.length}. Hubo un error al continuar — intenta de nuevo.`
+    );
   } finally {
-    el("btnSiguienteGrupo").disabled = false;
+    btn.disabled = false;
+    btn.textContent = "Guardar todo ✓";
   }
 });
-
-function limpiarTextos() {
-  el("txtFortalezas").value = "";
-  el("txtAspectos").value = "";
-  el("txtObjetivo").value = "";
-  el("txtObservaciones").value = "";
-}
 
 // -------------------------------------
 // PANTALLA 5: LISTO -> nueva tanda

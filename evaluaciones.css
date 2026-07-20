@@ -410,6 +410,75 @@ transform:scale(1.05);
 }
 
 /*=====================================
+BARRA DE PROGRESO (por punto de evaluación)
+=====================================*/
+
+.barra-progreso{
+width:100%;
+height:8px;
+border-radius:99px;
+background:#ffe3f0;
+overflow:hidden;
+margin-bottom:16px;
+}
+
+.barra-progreso-fill{
+height:100%;
+background:linear-gradient(90deg,#ff72b7,#ef4b9b);
+border-radius:99px;
+transition:width .25s ease;
+}
+
+/*=====================================
+FILAS DE ALUMNAS POR PUNTO DE EVALUACIÓN
+(una categoría o comentario a la vez, todas
+las alumnas seleccionadas visibles juntas)
+=====================================*/
+
+.filas-alumnas{
+display:flex;
+flex-direction:column;
+gap:6px;
+max-height:52vh;
+overflow-y:auto;
+padding:4px;
+text-align:left;
+}
+
+.fila-alumna-punto{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:10px 12px;
+border-bottom:1px solid #ffe9f5;
+}
+
+.fila-alumna-nombre{
+font-size:clamp(13.5px,3.8vw,15.5px);
+font-weight:600;
+color:#555;
+flex:1;
+}
+
+.input-texto-fila{
+flex:1.4;
+border:2px solid #ffd8ea;
+border-radius:12px;
+padding:8px 10px;
+font-size:clamp(13px,3.6vw,15px);
+font-family:inherit;
+color:#555;
+outline:none;
+transition:.18s;
+}
+
+.input-texto-fila:focus{
+border-color:#ef4b9b;
+box-shadow:0 0 0 3px rgba(239,75,155,.15);
+}
+
+/*=====================================
 RESPONSIVE
 =====================================*/
 

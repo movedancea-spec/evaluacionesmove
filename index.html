@@ -64,28 +64,14 @@
     <button class="btn-grande btn-siguiente" id="btnEmpezarEvaluacion" disabled>Empezar a calificar →</button>
   </section>
 
-  <!-- ============ PANTALLA 4: EVALUANDO (carrusel por alumna) ============ -->
+  <!-- ============ PANTALLA 4: EVALUANDO (una categoría a la vez, todas las alumnas juntas) ============ -->
   <section id="pantallaEvaluando" class="pantalla" hidden>
     <p class="progreso-cola" id="progresoCola"></p>
-    <p class="student-real-name" id="nombreAlumnaActual"></p>
+    <p class="grupo-titulo" id="tituloPunto"></p>
 
-    <div class="dots" id="dotsGrupos"></div>
+    <div class="barra-progreso"><div class="barra-progreso-fill" id="barraFill"></div></div>
 
-    <div id="grupoCategorias" class="grupo-categorias"></div>
-
-    <div id="pantallaTextos" class="grupo-textos" hidden>
-      <label class="campo-label">💪 Fortalezas</label>
-      <textarea id="txtFortalezas" class="textarea-move" rows="2"></textarea>
-
-      <label class="campo-label">🎯 Aspectos a mejorar</label>
-      <textarea id="txtAspectos" class="textarea-move" rows="2"></textarea>
-
-      <label class="campo-label">📈 Objetivo siguiente periodo</label>
-      <textarea id="txtObjetivo" class="textarea-move" rows="2"></textarea>
-
-      <label class="campo-label">📝 Observaciones</label>
-      <textarea id="txtObservaciones" class="textarea-move" rows="2"></textarea>
-    </div>
+    <div id="filasAlumnas" class="filas-alumnas"></div>
 
     <div class="nav-botones">
       <button class="btn-secundario" id="btnAtrasGrupo">← Atrás</button>
