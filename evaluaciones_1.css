@@ -1,0 +1,427 @@
+/* ===================================================
+   MOVE EVALUACIONES
+   Mismo lenguaje visual que MOVE ACCESS (biometrico.css)
+=================================================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Poppins",sans-serif;
+}
+
+html{
+width:100%;
+min-height:100%;
+}
+
+body{
+width:100%;
+min-height:100dvh;
+overflow-y:auto;
+overflow-x:hidden;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:30px 20px;
+background:linear-gradient(-45deg,#ffffff,#fff4fb,#ffe9f5,#fff6fc,#ffffff);
+background-size:400% 400%;
+animation:gradientMove 18s ease infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/*=====================================
+BURBUJAS
+=====================================*/
+
+.floating{
+position:fixed;
+border-radius:50%;
+filter:blur(45px);
+opacity:.20;
+animation:float 12s infinite ease-in-out;
+pointer-events:none;
+}
+
+.floating1{ width:180px; height:180px; background:#ff9ed2; left:5%; top:10%; }
+.floating2{ width:240px; height:240px; background:#ffd8ea; right:5%; top:15%; animation-delay:2s; }
+.floating3{ width:170px; height:170px; background:#ffc6df; left:15%; bottom:10%; animation-delay:4s; }
+.floating4{ width:240px; height:240px; background:#ffeaf6; right:10%; bottom:5%; animation-delay:1s; }
+
+@keyframes float{
+50%{ transform:translateY(-25px) translateX(15px); }
+}
+
+/*=====================================
+CONTENEDOR
+=====================================*/
+
+.container{
+width:92%;
+max-width:560px;
+margin:20px auto;
+padding:clamp(20px,6vw,35px);
+border-radius:clamp(20px,5vw,35px);
+background:rgba(255,255,255,.55);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+box-shadow:0 20px 60px rgba(239,75,155,.18),0 6px 15px rgba(0,0,0,.05);
+text-align:center;
+position:relative;
+z-index:20;
+}
+
+.logo{
+width:80%;
+max-width:260px;
+margin:auto;
+display:block;
+margin-bottom:6px;
+animation:logoFloat 5s ease-in-out infinite;
+filter:drop-shadow(0 15px 25px rgba(239,75,155,.25));
+}
+
+@keyframes logoFloat{
+50%{ transform:translateY(-8px); }
+}
+
+.title{
+font-size:clamp(20px,5vw,28px);
+font-weight:700;
+color:#ef4b9b;
+margin-top:6px;
+margin-bottom:14px;
+}
+
+/*=====================================
+PANTALLAS / TEXTOS GENERALES
+=====================================*/
+
+.pantalla{
+animation:fadeIn .35s ease;
+}
+
+@keyframes fadeIn{
+from{ opacity:0; transform:translateY(10px); }
+to{ opacity:1; transform:translateY(0); }
+}
+
+.loading-text{
+font-size:clamp(16px,4.5vw,20px);
+color:#ef4b9b;
+font-weight:600;
+padding:30px 0;
+}
+
+.subtitulo{
+font-size:clamp(15px,4vw,19px);
+font-weight:700;
+color:#777;
+margin-bottom:14px;
+}
+
+.saludo-maestra{
+font-size:clamp(16px,4.5vw,20px);
+font-weight:700;
+color:#ef4b9b;
+margin-bottom:6px;
+}
+
+.student-real-name{
+font-size:clamp(24px,7vw,32px);
+font-weight:800;
+color:#ef4b9b;
+margin-bottom:8px;
+}
+
+.message{
+font-size:clamp(15px,4vw,18px);
+color:#666;
+font-weight:600;
+margin-bottom:18px;
+}
+
+.mensaje-error{
+min-height:24px;
+color:#e0245e;
+font-weight:700;
+font-size:clamp(13px,3.5vw,15px);
+margin-top:14px;
+}
+
+/*=====================================
+LISTA DE MAESTRAS (botones grandes)
+=====================================*/
+
+.lista-botones{
+display:flex;
+flex-direction:column;
+gap:12px;
+max-height:50vh;
+overflow-y:auto;
+padding:4px;
+}
+
+.lista-botones button{
+border:none;
+border-radius:18px;
+padding:clamp(14px,4vw,18px);
+font-size:clamp(16px,4.5vw,19px);
+font-weight:700;
+color:white;
+background:linear-gradient(180deg,#ff72b7,#ef4b9b);
+box-shadow:0 8px 20px rgba(239,75,155,.30);
+cursor:pointer;
+transition:.18s;
+}
+
+.lista-botones button:active{ transform:scale(.97); }
+
+/*=====================================
+FORMULARIOS (select / input / textarea)
+=====================================*/
+
+.campo-label{
+display:block;
+text-align:left;
+font-size:clamp(13px,3.5vw,15px);
+font-weight:700;
+color:#ef4b9b;
+margin:14px 0 6px 2px;
+}
+
+.select-move,
+.buscador,
+.textarea-move{
+width:100%;
+border:2px solid #ffd8ea;
+border-radius:14px;
+padding:clamp(10px,3vw,14px);
+font-size:clamp(14px,4vw,16px);
+font-family:inherit;
+color:#555;
+background:white;
+outline:none;
+transition:.18s;
+}
+
+.select-move:focus,
+.buscador:focus,
+.textarea-move:focus{
+border-color:#ef4b9b;
+box-shadow:0 0 0 3px rgba(239,75,155,.15);
+}
+
+.textarea-move{
+resize:vertical;
+text-align:left;
+margin-bottom:4px;
+}
+
+/*=====================================
+BOTONES GRANDES
+=====================================*/
+
+.btn-grande{
+width:100%;
+border:none;
+border-radius:18px;
+padding:clamp(14px,4.5vw,18px);
+font-size:clamp(16px,4.5vw,19px);
+font-weight:700;
+color:white;
+cursor:pointer;
+transition:.18s;
+margin-top:20px;
+}
+
+.btn-siguiente{
+background:linear-gradient(180deg,#ff72b7,#ef4b9b);
+box-shadow:0 8px 20px rgba(239,75,155,.30);
+}
+
+.btn-siguiente:disabled{
+opacity:.45;
+cursor:not-allowed;
+box-shadow:none;
+}
+
+.btn-grande:active:not(:disabled){ transform:scale(.97); }
+
+.btn-secundario{
+border:2px solid #ef4b9b;
+background:white;
+color:#ef4b9b;
+border-radius:18px;
+padding:clamp(14px,4.5vw,18px);
+font-size:clamp(15px,4.2vw,18px);
+font-weight:700;
+cursor:pointer;
+flex:1;
+transition:.18s;
+}
+
+.btn-secundario:active{ transform:scale(.97); }
+
+.nav-botones{
+display:flex;
+gap:12px;
+margin-top:20px;
+}
+
+.nav-botones .btn-siguiente{
+flex:1.4;
+margin-top:0;
+}
+
+/*=====================================
+BUSCADOR + CHECKLIST DE ALUMNAS
+=====================================*/
+
+.buscador{
+margin-bottom:12px;
+}
+
+.lista-checks{
+display:flex;
+flex-direction:column;
+gap:8px;
+max-height:38vh;
+overflow-y:auto;
+padding:4px;
+text-align:left;
+}
+
+.item-alumna{
+display:flex;
+align-items:center;
+gap:10px;
+border:2px solid #ffe3f0;
+border-radius:14px;
+padding:10px 14px;
+cursor:pointer;
+transition:.15s;
+font-size:clamp(14px,4vw,16px);
+color:#555;
+font-weight:600;
+}
+
+.item-alumna.seleccionada{
+border-color:#ef4b9b;
+background:rgba(239,75,155,.08);
+color:#ef4b9b;
+}
+
+.item-alumna input{
+width:20px;
+height:20px;
+accent-color:#ef4b9b;
+flex-shrink:0;
+}
+
+.contador-seleccion{
+margin-top:12px;
+font-weight:700;
+color:#ef4b9b;
+font-size:clamp(13px,3.5vw,15px);
+}
+
+/*=====================================
+DOTS DE PROGRESO (grupos de categorías)
+=====================================*/
+
+.dots{
+display:flex;
+justify-content:center;
+gap:clamp(8px,3vw,14px);
+margin:clamp(14px,4vw,22px) 0;
+}
+
+.dots span{
+width:clamp(12px,4vw,16px);
+height:clamp(12px,4vw,16px);
+border-radius:50%;
+border:2px solid #ef4b9b;
+transition:.25s;
+}
+
+.dots span.fill{
+background:#ef4b9b;
+box-shadow:0 0 12px rgba(239,75,155,.55);
+}
+
+.progreso-cola{
+font-size:clamp(13px,3.5vw,15px);
+font-weight:700;
+color:#999;
+margin-bottom:4px;
+}
+
+/*=====================================
+CATEGORÍAS / ESTRELLAS
+=====================================*/
+
+.grupo-titulo{
+font-size:clamp(16px,4.5vw,19px);
+font-weight:800;
+color:#ef4b9b;
+margin-bottom:14px;
+}
+
+.categoria-fila{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:10px 4px;
+border-bottom:1px solid #ffe9f5;
+text-align:left;
+}
+
+.categoria-nombre{
+font-size:clamp(13.5px,3.8vw,15.5px);
+font-weight:600;
+color:#555;
+flex:1;
+}
+
+.estrellas{
+display:flex;
+gap:4px;
+flex-shrink:0;
+}
+
+.estrella{
+font-size:clamp(22px,6vw,28px);
+cursor:pointer;
+color:#ffd8ea;
+transition:.12s;
+user-select:none;
+}
+
+.estrella.activa{
+color:#ef4b9b;
+transform:scale(1.05);
+}
+
+/*=====================================
+RESPONSIVE
+=====================================*/
+
+@media(max-width:360px){
+.container{ width:96%; margin:10px auto; }
+}
+
+@media(max-height:640px){
+.container{ margin:8px auto; padding:clamp(14px,4vw,22px); }
+.logo{ max-width:150px; }
+}
+
+@media(min-width:900px){
+.container{ max-width:600px; }
+}
