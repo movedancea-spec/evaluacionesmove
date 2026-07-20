@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>MOVE Dance Academy - Evaluaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="evaluaciones.css" />
+</head>
+<body>
+
+<div id="particles"></div>
+<div class="floating floating1"></div>
+<div class="floating floating2"></div>
+<div class="floating floating3"></div>
+<div class="floating floating4"></div>
+
+<div class="container">
+
+  <img src="logo.png" alt="MOVE Dance Academy" class="logo" />
+  <div class="title">Evaluaciones</div>
+
+  <!-- ============ PANTALLA 0: CARGANDO ============ -->
+  <section id="pantallaCargando" class="pantalla">
+    <p class="loading-text">✨ Cargando información...</p>
+  </section>
+
+  <!-- ============ PANTALLA 1: MAESTRA ============ -->
+  <section id="pantallaMaestra" class="pantalla" hidden>
+    <p class="subtitulo">👩‍🏫 ¿Quién va a calificar hoy?</p>
+    <div id="listaMaestras" class="lista-botones"></div>
+  </section>
+
+  <!-- ============ PANTALLA 2: CLASE / PERIODO ============ -->
+  <section id="pantallaClase" class="pantalla" hidden>
+    <p class="saludo-maestra" id="saludoMaestra"></p>
+    <p class="subtitulo">🩰 ¿Qué clase vas a evaluar?</p>
+
+    <label class="campo-label">Clase / Grupo</label>
+    <select id="selectClase" class="select-move"></select>
+
+    <label class="campo-label">Periodo</label>
+    <select id="selectPeriodo" class="select-move"></select>
+
+    <label class="campo-label">Tipo de evaluación</label>
+    <select id="selectTipo" class="select-move">
+      <option value="TRIMESTRAL">Trimestral</option>
+      <option value="SEMESTRAL">Semestral</option>
+    </select>
+
+    <label class="campo-label">Año</label>
+    <input type="number" id="inputAnio" class="select-move" />
+
+    <button class="btn-grande btn-siguiente" id="btnIrAlumnas">Siguiente →</button>
+  </section>
+
+  <!-- ============ PANTALLA 3: SELECCIONAR ALUMNAS (multi) ============ -->
+  <section id="pantallaAlumnas" class="pantalla" hidden>
+    <p class="subtitulo">🔎 Busca y selecciona a las alumnas que vas a calificar ahora</p>
+    <input type="text" id="buscarAlumna" class="buscador" placeholder="Escribe un nombre..." />
+    <div id="listaAlumnas" class="lista-checks"></div>
+    <p class="contador-seleccion" id="contadorSeleccion">0 seleccionadas</p>
+    <button class="btn-grande btn-siguiente" id="btnEmpezarEvaluacion" disabled>Empezar a calificar →</button>
+  </section>
+
+  <!-- ============ PANTALLA 4: EVALUANDO (una categoría a la vez, todas las alumnas juntas) ============ -->
+  <section id="pantallaEvaluando" class="pantalla" hidden>
+    <p class="progreso-cola" id="progresoCola"></p>
+    <p class="grupo-titulo" id="tituloPunto"></p>
+
+    <div class="barra-progreso"><div class="barra-progreso-fill" id="barraFill"></div></div>
+
+    <div id="filasAlumnas" class="filas-alumnas"></div>
+
+    <div class="nav-botones">
+      <button class="btn-secundario" id="btnAtrasGrupo">← Atrás</button>
+      <button class="btn-grande btn-siguiente" id="btnSiguienteGrupo">Siguiente →</button>
+    </div>
+  </section>
+
+  <!-- ============ PANTALLA 5: LISTO ============ -->
+  <section id="pantallaListo" class="pantalla" hidden>
+    <p class="student-real-name">✅ ¡Listo!</p>
+    <p class="message" id="mensajeFinal"></p>
+    <button class="btn-grande btn-siguiente" id="btnNuevaTanda">Evaluar a otras alumnas</button>
+  </section>
+
+  <p class="mensaje-error" id="mensajeError"></p>
+
+</div>
+
+<script src="evaluaciones.js"></script>
+</body>
+</html>
