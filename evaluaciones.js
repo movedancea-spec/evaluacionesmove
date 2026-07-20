@@ -3,9 +3,7 @@
 // MOVE Dance Academy
 // ==========================================
 
-// ⚠️ IMPORTANTE: reemplaza esta URL por la de TU Worker de
-// Cloudflare una vez que lo hayas creado (ver instrucciones).
-const WORKER_URL = "evaluacionesmove.movedancea.workers.dev";
+const WORKER_URL = "https://evaluacionesmove.movedancea.workers.dev";
 
 // -------------------------------------
 // CATEGORÍAS (17), agrupadas en 3 pantallas
